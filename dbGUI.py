@@ -216,10 +216,9 @@ def newRental():
         PaymentDate = "0000-00-00"
 
         #clearAll()
-        #query = "INSERT INTO RENTAL (CustID, VehicleID, StartDate, OrderDate, RentalType, Qty, ReturnDate, TotalAmount, PaymentDate) VALUES ({cust}, '{VehicleID}', '{StartDate}', '{OrderDate}', '{RentalType}', {Qty}, '{ReturnDate}', {TotalAmount}, '{PaymentDate}')"
-        query = "INSERT INTO rental (CustID, VehicleID, StartDate, OrderDate, RentalType, Qty, ReturnDate, TotalAmount, PaymentDate) VALUES ({cust}, '{VehicleID}', '{StartDate}', '{OrderDate}', {RentalType}, {Qty}, '{ReturnDate}', {TotalAmount}, '{PaymentDate}')".format(cust=cust, VehicleID=vehicleID, StartDate=StartDate, OrderDate=OrderDate, RentalType=RentalType, Qty=Qty, ReturnDate=ReturnDate, TotalAmount=TotalAmount, PaymentDate=PaymentDate)
+        query = "INSERT INTO rental (CustID, VehicleID, StartDate, OrderDate, RentalType, Qty, ReturnDate, TotalAmount, PaymentDate, returned) VALUES ({cust}, '{VehicleID}', '{StartDate}', '{OrderDate}', {RentalType}, {Qty}, '{ReturnDate}', {TotalAmount}, '{PaymentDate}', 0)".format(cust=cust, VehicleID=vehicleID, StartDate=StartDate, OrderDate=OrderDate, RentalType=RentalType, Qty=Qty, ReturnDate=ReturnDate, TotalAmount=TotalAmount, PaymentDate=PaymentDate)
         getQuery(query)
-        queryText.insert(tk.INSERT, "New Customer Added.")
+        queryText.insert(tk.INSERT, "New Rental Added.")
         
         top.destroy()
 
@@ -277,7 +276,7 @@ def newRental():
     # datatype of menu text
     rtMenu = tk.StringVar()
     # initial menu text
-    rtMenu.set( "Select a Rental Type" ) 
+    rtMenu.set( "Vehicle ID" )
     # Create Dropdown menu
     rtdrop = tk.OptionMenu( top , rtMenu , *rtDict)
     rtdrop.grid(column=0, row=7)
@@ -286,13 +285,40 @@ def newRental():
 
 
     confirmbutton = tk.Button(top, text="Confirm", command=process)
-    confirmbutton.grid(column=0, columnspan=2, row=6)
+    confirmbutton.grid(column=0, columnspan=2, row=8)
 
-def vehicleReturn():
-    def process():
+def vehicleReturn(): 
+    def process2():
+        def process():
+            name = nameentry.get()
+            ReturnDate = rtdentry.get()
+            vehicleID = idMenu.get()
+            clearAll()
+
+            # Get Customer ID
+            query = "SELECT CustID FROM Customer WHERE Name = '{}'".format(name)
+            cust = getQuery(query)
+            if cust == '':
+                queryText.insert(tk.INSERT,"No Customer Found")
+                return
+            cust = cleaner(cust)
+            queryText.insert(tk.INSERT,"Customer ID: " + cust + '\n')
+            cust = int(cust)
+
+            query = "SELECT TotalAmount FROM Rental WHERE CustID = {} AND ReturnDate = '{}' AND VehicleID = '{}'".format(cust, ReturnDate, vehicleID)
+            total = cleaner(getQuery(query))
+            if total == '':
+                queryText.insert(tk.INSERT,"No Rental Found")
+                return
+            queryText.insert(tk.INSERT, "Total Due" + total + "\n")
+            query = "UPDATE Rental SET Returned = 1 WHERE CustID = {} AND ReturnDate = '{}' AND VehicleID = '{}'".format(cust, ReturnDate, vehicleID)
+            getQuery(query)
+            queryText.insert(tk.INSERT, "Vehicle Returned.")
+            top.destroy()
+
+        # Get rented vehicles
         name = nameentry.get()
         ReturnDate = rtdentry.get()
-        vehicleID = vehicleIDentry.get()
         clearAll()
 
         # Get Customer ID
@@ -305,17 +331,25 @@ def vehicleReturn():
         queryText.insert(tk.INSERT,"Customer ID: " + cust + '\n')
         cust = int(cust)
 
-        query = "SELECT TotalAmount FROM Rental WHERE CustID = {} AND ReturnDate = '{}' AND VehicleID = '{}'".format(cust, ReturnDate, vehicleID)
-        total = cleaner(getQuery(query))
-        if total == '':
-            queryText.insert(tk.INSERT,"No Rental Found")
-            return
-        queryText.insert(tk.INSERT, "Total Due" + total + "/n")
-        query = "UPDATE Rental SET Returned = 1 WHERE CustID = {} AND ReturnDate = '{}' AND VehicleID = '{}'".format(cust, ReturnDate, vehicleID)
-        getQuery(query)
-        queryText.insert(tk.INSERT, "Vehicle Returned.")
-        
-        top.destroy()
+        query = "SELECT VehicleID FROM Rental WHERE CustID = {} AND ReturnDate = '{}' AND returned != 1".format(cust, ReturnDate)
+        idDict = getQuery(query)
+        #Clean
+        idDict = idDict.replace("(", "")
+        idDict = idDict.replace(")", "")
+        idDict = idDict.replace("'", "")
+        idDict = idDict.replace(",", "")
+        idDict = idDict.split('\n')
+
+        # datatype of menu text
+        idMenu = tk.StringVar()
+        # initial menu text
+        idMenu.set( "Select a Rental Type" ) 
+        # Create Dropdown menu
+        iddrop = tk.OptionMenu( top , idMenu , *idDict)
+        iddrop.grid(column=0, row=4)
+        #rtdrop.pack()
+        confirmbutton = tk.Button(top, text="Confirm", command=process)
+        confirmbutton.grid(column=0, columnspan=2, row=5)
 
     top = tk.Toplevel(window)
     top.title("Insert Customer")
@@ -337,13 +371,35 @@ def vehicleReturn():
     rtdentry = tk.Entry(top)
     rtdentry.grid(column=1, row=2)
 
-    vehicleIDlabel = tk.Label(top, text="vehicleID", background=_color1)
-    vehicleIDlabel.grid(column=0, row=3)
-    vehicleIDentry = tk.Entry(top)
-    vehicleIDentry.grid(column=1, row=3)
+    # vehicleIDlabel = tk.Label(top, text="vehicleID", background=_color1)
+    # vehicleIDlabel.grid(column=0, row=3)
+    # vehicleIDentry = tk.Entry(top)
+    # vehicleIDentry.grid(column=1, row=3)
 
-    confirmbutton = tk.Button(top, text="Confirm", command=process)
-    confirmbutton.grid(column=0, columnspan=2, row=4)
+    confirmbutton = tk.Button(top, text="Confirm", command=process2)
+    confirmbutton.grid(column=0, columnspan=2, row=3)
+    top = tk.Toplevel(window)
+    top.title("Insert Customer")
+    top.geometry("480x480")
+    top.resizable(False, False)
+    top.configure(background=_color1)
+
+    # TODO: name label/entry, phone label/entry, confirm button
+    titlelabel = tk.Label(top, text="Insert Customer info into DB", background=_color1)
+    titlelabel.grid(column=0, columnspan=2, row=0)
+
+    namelabel = tk.Label(top, text="Full Name", background=_color1)
+    namelabel.grid(column=0, row=1)
+    nameentry = tk.Entry(top)
+    nameentry.grid(column=1, row=1)
+
+    rtdlabel = tk.Label(top, text="Return Date (YYYY-MM-DD)", background=_color1)
+    rtdlabel.grid(column=0, row=2)
+    rtdentry = tk.Entry(top)
+    rtdentry.grid(column=1, row=2)
+
+    confirmbutton = tk.Button(top, text="Confirm", command=process2)
+    confirmbutton.grid(column=0, columnspan=2, row=3)
 
 def executeQuery():
     query = queryText.get("1.0", tk.END)
@@ -379,6 +435,8 @@ querymenu.add_command(label="Exit", command=window.quit)
 editmenu = tk.Menu(menubar, tearoff=0)
 editmenu.add_command(label="Insert Customer", command=insertCustomer)
 editmenu.add_command(label="Insert Vehicle", command=insertVehicle)
+editmenu.add_command(label="New Rental", command=newRental)
+editmenu.add_command(label="Return Rental", command=vehicleReturn)
 
 menubar.add_cascade(label="Query", menu=querymenu)
 menubar.add_cascade(label="Edit", menu=editmenu)
