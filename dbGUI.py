@@ -352,7 +352,7 @@ def vehicleReturn():
         confirmbutton.grid(column=0, columnspan=2, row=5)
 
     top = tk.Toplevel(window)
-    top.title("Insert Customer")
+    top.title("Return Rental")
     top.geometry("480x480")
     top.resizable(False, False)
     top.configure(background=_color1)
