@@ -352,13 +352,13 @@ def vehicleReturn():
         confirmbutton.grid(column=0, columnspan=2, row=5)
 
     top = tk.Toplevel(window)
-    top.title("Return Rental")
+    top.title("Return Vehicle")
     top.geometry("480x480")
     top.resizable(False, False)
     top.configure(background=_color1)
 
     # TODO: name label/entry, phone label/entry, confirm button
-    titlelabel = tk.Label(top, text="Return Rental", background=_color1)
+    titlelabel = tk.Label(top, text="Return Vehicle", background=_color1)
     titlelabel.grid(column=0, columnspan=2, row=0)
 
     namelabel = tk.Label(top, text="Full Name", background=_color1)
@@ -375,28 +375,6 @@ def vehicleReturn():
     # vehicleIDlabel.grid(column=0, row=3)
     # vehicleIDentry = tk.Entry(top)
     # vehicleIDentry.grid(column=1, row=3)
-
-    confirmbutton = tk.Button(top, text="Confirm", command=process2)
-    confirmbutton.grid(column=0, columnspan=2, row=3)
-    top = tk.Toplevel(window)
-    top.title("Insert Customer")
-    top.geometry("480x480")
-    top.resizable(False, False)
-    top.configure(background=_color1)
-
-    # TODO: name label/entry, phone label/entry, confirm button
-    titlelabel = tk.Label(top, text="Insert Customer info into DB", background=_color1)
-    titlelabel.grid(column=0, columnspan=2, row=0)
-
-    namelabel = tk.Label(top, text="Full Name", background=_color1)
-    namelabel.grid(column=0, row=1)
-    nameentry = tk.Entry(top)
-    nameentry.grid(column=1, row=1)
-
-    rtdlabel = tk.Label(top, text="Return Date (YYYY-MM-DD)", background=_color1)
-    rtdlabel.grid(column=0, row=2)
-    rtdentry = tk.Entry(top)
-    rtdentry.grid(column=1, row=2)
 
     confirmbutton = tk.Button(top, text="Confirm", command=process2)
     confirmbutton.grid(column=0, columnspan=2, row=3)
