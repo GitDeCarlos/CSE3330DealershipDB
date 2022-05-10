@@ -31,8 +31,11 @@ def getQuery(query="SELECT * FROM CUSTOMER"):
     cursor.execute(query)
     result = cursor.fetchall()
     resultText = ""
+    rows = 0
     for x in result:
         resultText += str(x) + "\n"
+        rows += 1
+    resultText += str(rows) + " rows returned from query.\n"
     return resultText
 
 def cleaner(words):
