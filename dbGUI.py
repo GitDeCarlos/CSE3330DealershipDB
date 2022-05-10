@@ -79,6 +79,60 @@ def insertCustomer():
     confirmbutton = tk.Button(top, text="Confirm", command=confirmCustomer)
     confirmbutton.grid(column=0, columnspan=2, row=3)
  
+def insertVehicle():
+    
+    def confirmVehicle():
+        vehicleID = videntry.get()
+        description = descentry.get()
+        year = yearentry.get()
+        type = typeentry.get()
+        category = categoryentry.get()
+
+        clearAll()
+        query = "INSERT INTO VEHICLE (VehicleID, Description, Year, Type, Category) VALUES ('{vehicleID}', '{description}', '{year}','{type}','{category}')".format(vehicleID=vehicleID, description=description, year=year, type=type, category=category)
+        getQuery(query)
+        queryText.insert(tk.INSERT, "New Vehicle Added.")
+        
+        top.destroy()
+
+    top = tk.Toplevel(window)
+    top.title("Insert Vehicle")
+    top.geometry("300x180")
+    top.resizable(False, False)
+    top.configure(background=_color1)
+
+    # TODO: name label/entry, phone label/entry, confirm button
+    titlelabel = tk.Label(top, text="Insert Customer info into DB", background=_color1)
+    titlelabel.grid(column=0, columnspan=2, row=0)
+
+    vidlabel = tk.Label(top, text="Vehicle ID", background=_color1)
+    vidlabel.grid(column=0, row=1)
+    videntry = tk.Entry(top)
+    videntry.grid(column=1, row=1)
+
+    desclabel = tk.Label(top, text="Description", background=_color1)
+    desclabel.grid(column=0, row=2)
+    descentry = tk.Entry(top)
+    descentry.grid(column=1, row=2)
+
+    yearlabel = tk.Label(top, text="Year", background=_color1)
+    yearlabel.grid(column=0, row=3)
+    yearentry = tk.Entry(top)
+    yearentry.grid(column=1, row=3)
+
+    typelabel = tk.Label(top, text="Type", background=_color1)
+    typelabel.grid(column=0, row=4)
+    typeentry = tk.Entry(top)
+    typeentry.grid(column=1, row=4)
+
+    categorylabel = tk.Label(top, text="Category", background=_color1)
+    categorylabel.grid(column=0, row=5)
+    categoryentry = tk.Entry(top)
+    categoryentry.grid(column=1, row=5)
+
+    confirmbutton = tk.Button(top, text="Confirm", command=confirmVehicle)
+    confirmbutton.grid(column=0, columnspan=2, row=6)
+
 def newRental():
     def process():
         name = nameentry.get()
@@ -321,7 +375,7 @@ querymenu.add_command(label="Exit", command=window.quit)
 
 editmenu = tk.Menu(menubar, tearoff=0)
 editmenu.add_command(label="Insert Customer", command=insertCustomer)
-editmenu.add_command(label="Insert Vehicle")
+editmenu.add_command(label="Insert Vehicle", command=insertVehicle)
 
 menubar.add_cascade(label="Query", menu=querymenu)
 menubar.add_cascade(label="Edit", menu=editmenu)
