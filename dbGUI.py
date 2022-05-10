@@ -358,7 +358,7 @@ def vehicleReturn():
     top.configure(background=_color1)
 
     # TODO: name label/entry, phone label/entry, confirm button
-    titlelabel = tk.Label(top, text="Insert Customer info into DB", background=_color1)
+    titlelabel = tk.Label(top, text="Return Rental", background=_color1)
     titlelabel.grid(column=0, columnspan=2, row=0)
 
     namelabel = tk.Label(top, text="Full Name", background=_color1)
